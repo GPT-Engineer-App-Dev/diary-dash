@@ -1,5 +1,6 @@
 import { Container, Text, VStack, Heading, Box, Image, Link, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [posts, setPosts] = useState([]);
@@ -8,6 +9,12 @@ const Index = () => {
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
     setPosts(storedPosts);
   }, []);
+
+  const handleDelete = (index) => {
+    const updatedPosts = posts.filter((_, i) => i !== index);
+    localStorage.setItem("posts", JSON.stringify(updatedPosts));
+    setPosts(updatedPosts);
+  };
 
   return (
     <Container centerContent maxW="container.md" py={10}>
@@ -26,6 +33,7 @@ const Index = () => {
             <Heading fontSize="xl">{post.title}</Heading>
             <Text mt={4}>{post.content}</Text>
             {post.image && <Image src={post.image} alt={post.title} mt={4} />}
+            <Button colorScheme="red" mt={4} onClick={() => handleDelete(index)}>Delete</Button>
           </Box>
         ))}
       </VStack>
